@@ -34,7 +34,7 @@ int main(void) {
       }
       break;
     default:
-      printf("Error: Unsupported operationerator '%c'.\n", operation);
+      printf("Error: Unsupported operation '%c'.\n", operation);
       break;
   }
 
