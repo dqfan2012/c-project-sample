@@ -252,6 +252,7 @@ valgrind-massif: $(EXEC)
 CPPCHECK         = cppcheck
 DEPENDENCYCHECK  = $(HOME)/dependency-check/bin/dependency-check.sh
 FLAWFINDER       = flawfinder
+INFER						 = infer
 SPLINT           = splint
 
 cppcheck:
@@ -265,6 +266,9 @@ dependency-check:
 flawfinder:
 	$(FLAWFINDER) $(SRCS)
 
+infer:
+	$(INFER) run -- make
+
 splint:
 	$(SPLINT) $(SRCS) -Iinclude
 
@@ -272,7 +276,7 @@ splint:
 # Quality Target
 ###############################################################################
 # Runs all static analysis tools in sequence.
-quality: clang-analyze clang-tidy cppcheck flawfinder splint
+quality: clang-analyze clang-tidy cppcheck flawfinder splint infer
 	@echo "Quality checks complete."
 
 ###############################################################################
