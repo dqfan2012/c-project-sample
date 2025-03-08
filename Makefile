@@ -209,22 +209,14 @@ llvm-coverage: clean
 	@echo "Building with coverage instrumentation..."
 	@mkdir -p coverage/html
 
-	# 1) Rebuild main with clang + coverage flags
 	$(MAKE) CC=clang CFLAGS="$(DEBUG_CFLAGS) -fprofile-instr-generate -fcoverage-mapping" debug
-
-	# 2) Rebuild test runner with clang + coverage flags
 	$(MAKE) CC=clang CFLAGS="$(DEBUG_CFLAGS) -fprofile-instr-generate -fcoverage-mapping" test
 
-	# 3) Run main (writes coverage/main.profraw)
 	LLVM_PROFILE_FILE="coverage/main.profraw" ./bin/main
-
-	# 4) Run tests (writes coverage/tests.profraw)
 	LLVM_PROFILE_FILE="coverage/tests.profraw" ./bin/tests_runner
 
-	# 5) Merge coverage data
 	$(LLVM_PROFDATA) merge -sparse coverage/*.profraw -o coverage/combined.profdata
 
-	# 6) Generate HTML, including src/ and tests/ in the display
 	$(LLVM_COV) show \
 		./bin/main \
 		./bin/tests_runner \
