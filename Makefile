@@ -1,5 +1,5 @@
 ###############################################################################
-# c-project-skeleton-v2 Makefile
+# c-project-sample Makefile
 #
 # This Makefile supports Linux and macOS. It supports gcc and clang, and
 # defines debug and release builds along with targets for formatting,
@@ -19,7 +19,7 @@
 ###############################################################################
 # Project Configuration
 ###############################################################################
-PROJECT = c-project-skeleton-v2
+PROJECT = c-project-sample
 
 ###############################################################################
 # OS and Compiler Settings
@@ -67,6 +67,9 @@ else ifeq ($(CC),clang)
   COMMON_CFLAGS += $(COMMON_CLANG_CFLAGS)
   DEBUG_CFLAGS  += $(DEBUG_CFLAGS_CLANG)
 endif
+
+# Add include directory flag
+COMMON_CFLAGS += -Iinclude
 
 # Final flag sets for each build type
 DEBUG_CFLAGS := $(COMMON_CFLAGS) $(DEBUG_CFLAGS)
@@ -127,14 +130,15 @@ TEST_OBJS  = $(patsubst $(TEST_DIR)/%.c, $(BUILD_DIR)/%.test.o, $(TEST_SRCS))
 TEST_EXEC  = $(BIN_DIR)/tests_runner
 
 # Libraries required for Check. Adjust if necessary on your system.
-CHECK_LIBS = -lcheck -lm -lpthread
+CHECK_LIBS = -lcheck -lm -lpthread -lsubunit
 
 # Target to compile and run tests
+test: CFLAGS := $(DEBUG_CFLAGS)
 test: $(TEST_EXEC)
 	@echo "Running tests..."
 	./$(TEST_EXEC)
 
-$(TEST_EXEC): $(TEST_OBJS)
+$(TEST_EXEC): $(TEST_OBJS) $(filter-out $(BUILD_DIR)/main.o, $(OBJS))
 	@mkdir -p $(BIN_DIR)
 	$(CC) $(CFLAGS) $^ $(CHECK_LIBS) -o $@
 
