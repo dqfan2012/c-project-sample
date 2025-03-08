@@ -256,11 +256,6 @@ flawfinder:
 splint:
 	$(SPLINT) $(SRCS) -Iinclude
 
-sonar-scan: llvm-coverage ## Run SonarQube scan
-	@bash -c 'sonar-scanner -X \
-						-Dsonar.host.url=http://localhost:9000 \
-						-Dsonar.token=$$C_PROJECT_SAMPLE_TOKEN'
-
 ###############################################################################
 # Quality Target
 ###############################################################################
