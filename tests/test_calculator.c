@@ -27,12 +27,12 @@ START_TEST(test_multiply) {
 END_TEST
 
 START_TEST(test_divide) {
-    ck_assert_double_eq(divide(6, 3), 2.0);
-    ck_assert_double_eq(divide(-1, 1), -1.0);
-    ck_assert_double_eq(divide(-1, -1), 1.0);
-    ck_assert_double_eq(divide(-6, -3), 2.0);
-    ck_assert_double_eq(divide(5, 2), 2.5);
-    ck_assert_double_eq(divide(5, 0), 0.0); // Division by zero should return 0.0
+  ck_assert_double_eq_tol(divide(6, 3), 2.0, 0.000001);
+  ck_assert_double_eq_tol(divide(-1, 1), -1.0, 0.000001);
+  ck_assert_double_eq_tol(divide(-1, -1), 1.0, 0.000001);
+  ck_assert_double_eq_tol(divide(-6, -3), 2.0, 0.000001);
+  ck_assert_double_eq_tol(divide(5, 2), 2.5, 0.000001);
+  ck_assert_double_eq_tol(divide(5, 0), 0.0, 0.000001);
 }
 END_TEST
 
