@@ -3,19 +3,20 @@
 #include "calculator.h"
 
 int main(void) {
-  int num1, num2;
-  char op;
+  int num1;
+  int num2;
+  char operation;
 
   printf("Simple Calculator\n");
-  printf("Supported operations: add, subtract, multiply, and divide (for integers only).\n");
+  printf("Supported operationerations: add, subtract, multiply, and divide (for integers only).\n");
   printf("Enter calculation (e.g., 3 + 4): ");
 
-  if (scanf("%d %c %d", &num1, &op, &num2) != 3) {
-    printf("Invalid input. Please enter in the format: number operator number\n");
+  if (scanf("%d %c %d", &num1, &operation, &num2) != 3) {
+    printf("Invalid input. Please enter in the format: number operationerator number\n");
     return EXIT_FAILURE;
   }
 
-  switch (op) {
+  switch (operation) {
     case '+':
       printf("%d + %d = %d\n", num1, num2, add(num1, num2));
       break;
@@ -33,7 +34,7 @@ int main(void) {
       }
       break;
     default:
-      printf("Error: Unsupported operator '%c'.\n", op);
+      printf("Error: Unsupported operationerator '%c'.\n", operation);
       break;
   }
 

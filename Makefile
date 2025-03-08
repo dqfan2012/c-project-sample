@@ -179,10 +179,10 @@ LLVM_PROFDATA   = llvm-profdata
 
 # Targets using clang-based tools
 clang-analyze:
-	$(CLANG_ANALYZER) $(SRCS)
+	$(CLANG_ANALYZER) $(SRCS) -Iinclude
 
 clang-tidy:
-	$(CLANG_TIDY) $(SRCS) -- -std=c17
+	$(CLANG_TIDY) $(SRCS) -- -std=c17 -Iinclude
 
 # Sanitizer targets
 asan: CFLAGS += $(ASAN_FLAGS)
@@ -205,12 +205,17 @@ ubsan: CFLAGS += $(UBSAN_FLAGS)
 ubsan: clean debug
 	./$(EXEC)
 
-# LLVM code coverage target
-llvm-coverage: CFLAGS += $(COVERAGE_FLAGS)
-llvm-coverage: clean debug
-	LLVM_PROFILE_FILE="$(EXEC).profraw" ./$(EXEC)
-	$(LLVM_PROFDATA) merge -sparse $(EXEC).profraw -o $(EXEC).profdata
-	$(LLVM_COV) show ./$(EXEC) -instr-profile=$(EXEC).profdata
+llvm-coverage: CC := clang
+llvm-coverage: CFLAGS += -fprofile-instr-generate -fcoverage-mapping
+llvm-coverage: clean
+	@echo "Building with coverage instrumentation..."
+	@rm -rf build bin
+	@mkdir -p coverage
+	$(MAKE) CC=clang CFLAGS="$(DEBUG_CFLAGS) -fprofile-instr-generate -fcoverage-mapping" $(EXEC)
+	LLVM_PROFILE_FILE="coverage/main.profraw" ./bin/main
+	$(LLVM_PROFDATA) merge -sparse coverage/main.profraw -o coverage/main.profdata
+	$(LLVM_COV) export --format=text --instr-profile=coverage/main.profdata ./bin/main > coverage/coverage_report.txt
+	@echo "Coverage report generated at coverage/coverage_report.txt"
 
 # --- Valgrind-Based Tools (Linux Only) ---
 VALGRIND_MEMCHECK   = valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes
@@ -238,7 +243,7 @@ FLAWFINDER       = flawfinder
 SPLINT           = splint
 
 cppcheck:
-	$(CPPCHECK) --enable=all --inconclusive --std=c17 --suppress=missingIncludeSystem --quiet $(SRCS)
+	$(CPPCHECK) --enable=all --inconclusive -Iinclude --std=c17 --suppress=missingIncludeSystem --quiet $(SRCS) 2> cppcheck-report.txt
 
 dependency-check:
 	@echo "Running OWASP Dependency Check..."
@@ -249,7 +254,12 @@ flawfinder:
 	$(FLAWFINDER) $(SRCS)
 
 splint:
-	$(SPLINT) $(SRCS)
+	$(SPLINT) $(SRCS) -Iinclude
+
+sonar-scan: llvm-coverage ## Run SonarQube scan
+	@bash -c 'sonar-scanner -X \
+						-Dsonar.host.url=http://localhost:9000 \
+						-Dsonar.token=$$C_PROJECT_SAMPLE_TOKEN'
 
 ###############################################################################
 # Quality Target

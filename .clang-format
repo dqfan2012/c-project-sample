@@ -14,8 +14,3 @@ SpacesInAngles: false
 SpaceAfterCStyleCast: true
 SpaceBeforeCtorInitializerColon: true
 SpaceBeforeInheritanceColon: true
-SpacesAroundOperators: true
-SpaceAfterComma: true
-SpaceBeforeComma: false
-SpaceAfterSemicolon: true
-InsertTrailingNewline: true
