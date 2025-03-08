@@ -103,3 +103,6 @@ dkms.conf
 cppcheck-report.txt
 dependency-check-report.html
 coverage/
+*.profraw
+*.profdata
+*.gcov
