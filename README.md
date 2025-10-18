@@ -2,6 +2,10 @@
 
 c-project-sample is an example project built on the robust [dqfan2012/c-project-skeleton-v2](https://github.com/dqfan2012/c-project-skeleton-v2). This project demonstrates a clean, modular structure for C development on Linux and macOS, with integrated static analysis, unit testing (using Check), and a streamlined Makefile workflow.
 
+## Repo Moved
+
+This repository has been moved to [samuel-stidham/c-project-samle](https://github.com/samuel-stidham/c-project-samle)
+
 ## Overview
 
 - **Modern C Development:**
